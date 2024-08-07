@@ -45,7 +45,7 @@ public class Solutions {
     static int countword = 0;//for word search
 
     static int k = 0;//for word search
-    static int flag = 0;//for word search and for bst tree as well and for operators expressions
+    static int flag = 0, call=0;//for word search and for bst tree as well and for operators expressions
 
     static List<String> answers = new ArrayList<>();
 
@@ -5099,6 +5099,8 @@ public class Solutions {
     }
 
 
+    //just for understanding
+
     public static int findTargetSumWays(int[] nums, int target) {
         flag = 0;
         count = 0;
@@ -5148,9 +5150,231 @@ public class Solutions {
         expression.remove(expression.size() - 1);
         expression.remove(expression.size() - 1);
 
+    }
+
+
+    //another implementation of same method without TLE
+
+    public static  int findTargetSumWay(int[] nums, int target) {
+        flag = 0;
+        callFunction(nums, target, 0, 0);
+        return flag;
+    }
+
+    private static void callFunction(int[] nums, int target, int index, int currentSum) {
+        if (index == nums.length) {
+            if (currentSum == target) {
+                flag++;
+            }
+            return;
+        }
+
+        //for addition
+        currentSum += nums[index];
+        callFunction(nums, target, index + 1, currentSum);
+        currentSum -= nums[index];
+
+        //for substraction
+        currentSum -= nums[index];
+        callFunction(nums, target, index + 1, currentSum);
+        currentSum += nums[index];
+    }
+
+
+
+
+    public static boolean isAdditiveNumber(String num) {
+        flag=0;call=0;
+        for(int i =0; i<num.length()-1; i++) {
+            if(flag==1)
+                return true;
+            call=0;
+            String firstnumber= num.substring(0,i+1);
+            backtrack(num, firstnumber, "", Long.parseLong(firstnumber),Long.parseLong("0"), Long.parseLong(firstnumber));
+        }
+
+        return false;
 
     }
 
+    public static void backtrack(String num, String firstnumber, String secondnumber,Long n1, Long n2,  Long sums)
+    {
+
+
+        if((firstnumber.length()>1 && firstnumber.charAt(0)=='0') || (secondnumber.length()>1 && secondnumber.charAt(0)=='0'))
+            return;
+
+
+        if(flag==1)
+            return;
+
+        //base condition
+        if(call==1) {
+            String sumsoFar = String.valueOf(sums);
+            int l = firstnumber.length() + (secondnumber).length();
+            if (num.length() - l < sumsoFar.length())
+                return;
+            else {
+                String ans = num.substring(l, l + sumsoFar.length());
+                int start = 0;
+                if (!ans.equals(sumsoFar) || (ans.length()>1 && ans.charAt(0)=='0'))
+                    return;
+                else {
+                    int x = 0;
+                    x= firstnumber.length()+secondnumber.length();
+                    while (ans.equals(sumsoFar)) {
+                        x = x+ sumsoFar.length();
+                        if (x >= num.length()) {
+                            flag = 1;
+                            return;
+                        }
+                        n1 = n2;
+                        n2 = sums;
+                        firstnumber = secondnumber;
+                        secondnumber = ans;
+                        sums = n1 + n2;
+                        sumsoFar = String.valueOf(sums);
+                        l=l+secondnumber.length();
+                        if (num.length() - l < sumsoFar.length())
+                            return;
+                        ans=num.substring(l, l + sumsoFar.length());
+
+
+                    }
+                    return;
+                }
+            }
+        }
+
+        n1= Long.parseLong(firstnumber);
+
+        for(int i = firstnumber.length(); i<num.length(); i++)
+        {
+
+
+            call=1;
+            secondnumber=num.substring(firstnumber.length(), i+1);
+            n2= Long.parseLong(secondnumber);
+            sums=n1+n2;
+            backtrack(num, firstnumber, secondnumber,n1,n2,sums);
+            if(flag==1)
+                break;
+            sums= n1;
+            n2=Long.parseLong("0");
+            secondnumber="";
+
+        }
+    }
+
+
+
+    //just for understanding
+
+    public  static int countBeautifulArrangement(int n) {
+        int  nums[] = new int [n];
+        for(int i =0; i<n; i++)
+            nums[i]=i+1;
+
+        integerPermuteMap.clear();
+        flag=0;
+        List<List<Integer>> answer= new ArrayList<>();
+        callArrangementBackTrack(answer,nums, 0);
+        System.out.println(answer);
+        return flag;
+    }
+
+    private static void callArrangementBackTrack(List<List<Integer>> answer, int[] nums, int start) {
+
+        //base condition
+        if(start==nums.length-1) {
+            ArrayList t = new ArrayList();
+            for (int n : nums)
+                t.add(n);
+
+            if (!integerPermuteMap.containsKey(t) && isConditionSatisfied(t) ) {
+
+                integerPermuteMap.put(t,1);
+
+
+                answer.add(t);
+                flag++;
+
+            }
+        }
+        int var=0;
+        for(int i =start; i<nums.length; i++)
+        {
+            //swap
+            var=nums[start];
+            nums[start]=nums[i];
+            nums[i]= var;
+            callArrangementBackTrack(answer,nums,start+1);
+            //swap
+            var=nums[start];
+            nums[start]=nums[i];
+            nums[i]= var;
+        }
+    }
+
+    private static boolean isConditionSatisfied(ArrayList t) {
+        int i=1;
+        for(Object integer: t)
+        {
+            String  d=   integer.toString();
+            int k = Integer.parseInt(d);
+            if(k%i!=0 && i%k!=0)
+                return false;
+            i++;
+
+        }
+        return true;
+    }
+
+
+    public  static int countBeautifulArrangementOpt(int n) {
+        int  nums[] = new int [n];
+        for(int i =0; i<n; i++)
+            nums[i]=i+1;
+
+        integerPermuteMap.clear();
+        flag=0;
+        List<List<Integer>> answer= new ArrayList<>();
+        callArrangementBackTrackOpt(answer,nums, 0);
+        System.out.println(answer);
+        return flag;
+    }
+
+    private static void callArrangementBackTrackOpt(List<List<Integer>> answer, int[] nums, int start) {
+
+        if(start==nums.length  && (((start)% nums[start-1]==0 )||  (nums[start-1]%(start)==0))) {
+            ArrayList t = new ArrayList();
+            for (int n : nums)
+                t.add(n);
+
+            if (!integerPermuteMap.containsKey(t) ) {
+                integerPermuteMap.put(t,1);
+                answer.add(t);
+                flag++;
+            }
+            return;
+        }
+        else if(  start>0 && ((start)% nums[start-1]!=0 )&& (nums[start-1]%(start)!=0))
+            return;
+        int var=0;
+        for(int i =start; i<nums.length; i++)
+        {
+            //swap
+            var=nums[start];
+            nums[start]=nums[i];
+            nums[i]= var;
+            //call function
+            callArrangementBackTrackOpt(answer,nums,start+1);
+            //backtrack
+            var=nums[start];
+            nums[start]=nums[i];
+            nums[i]= var;
+        }
+    }
 
 }
 

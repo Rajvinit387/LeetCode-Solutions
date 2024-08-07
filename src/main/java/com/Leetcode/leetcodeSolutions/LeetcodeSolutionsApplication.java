@@ -11,7 +11,7 @@ public class LeetcodeSolutionsApplication {
 
 		SpringApplication.run(LeetcodeSolutionsApplication.class, args);
 		System.out.println("lEETCODE START.....");
-		System.out.println(Solutions.solveNQueens(4));
+		System.out.println(Solutions.countBeautifulArrangementOpt(2));
 	}
 
 }
