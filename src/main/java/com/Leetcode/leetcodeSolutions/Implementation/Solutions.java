@@ -1685,6 +1685,65 @@ public class Solutions {
     }
 
 
+    public static Node removeElements(Node head, int val) {
+        if (head == null)
+            return null;
+        Node temp = head;
+        Node prev = null;
+        while (temp != null) {
+            if (temp.data == val) {
+                if (prev != null) {
+                    prev.next = temp.next;
+                    temp = prev.next;
+                } else {
+                    head = temp.next;
+                    temp.next = null;
+                    temp = head;
+                }
+            } else {
+                prev = temp;
+                temp = temp.next;
+            }
+        }
+        return head;
+    }
+
+    public Node mergeInBetween(Node list1, int a, int b, Node list2) {
+        Node temp= list1;
+        Node prev=null;
+        int count=0;
+        while (count!=a)
+        {
+            prev= temp;
+            temp= temp.next;
+            count++;
+        }
+        if(prev==null)
+        {
+            list1= list1.next;
+
+        }
+        else
+        prev.next= list2;
+        while (count!=b)
+        {
+            temp= temp.next;
+            count++;
+        }
+      Node  temp2= list2;
+        while (temp2.next!=null)
+            temp2= temp2.next;
+        temp2.next= temp.next;
+        temp.next=null;
+
+     return list1;
+    }
+
+
+
+
+
+
 //end of linked list
 
 
@@ -2264,6 +2323,92 @@ public class Solutions {
         int leftsum = sumfromRootToLeaf(root.left, curr);
         int rightsum = sumfromRootToLeaf(root.right, curr);
         return leftsum + rightsum;
+    }
+
+
+    public static String serialize(TreeNode root) {
+        if (root == null)
+            return "NULL";
+        Queue<TreeNode> treeNodeQueue = new LinkedList<>();
+        treeNodeQueue.add(root);
+        String str = "";
+        while (!treeNodeQueue.isEmpty()) {
+            TreeNode x = treeNodeQueue.poll();
+            if (x == null) {
+                str = str + "NULL,";
+            } else {
+                str = str + x.data + ",";
+                if (x.left == null)
+                    treeNodeQueue.add(null);
+                else
+                    treeNodeQueue.add(x.left);
+                if (x.right == null)
+                    treeNodeQueue.add(null);
+                else
+                    treeNodeQueue.add(x.right);
+            }
+
+        }
+        return str.substring(0, str.length() - 1);
+
+
+    }
+
+    public static TreeNode deserialize(String data) {
+        if (data.equals("NULL"))
+            return null;
+        Queue<TreeNode> treeNodeQueue = new LinkedList<>();
+        String t[] = data.split(",");
+        TreeNode root = new TreeNode(Integer.parseInt(t[0]));
+        treeNodeQueue.add(root);
+        int i = 1;
+        while (i <= t.length - 1) {
+            TreeNode x = treeNodeQueue.poll();
+            if (!t[i].equals("NULL")) {
+                TreeNode left = new TreeNode(Integer.parseInt(t[i]));
+                x.left = left;
+                treeNodeQueue.add(left);
+            } else
+                x.left = null;
+            i++;
+            if (!t[i].equals("NULL")) {
+                TreeNode right = new TreeNode(Integer.parseInt(t[i]));
+                x.right = right;
+                treeNodeQueue.add(right);
+            } else
+                x.right = null;
+            i++;
+
+
+        }
+        return root;
+
+    }
+
+    public  static int kthSmallest(TreeNode root, int k) {
+            if(root==null)
+                return -1;
+        TreeNode x= root;
+       int flag=0;
+       Stack<TreeNode> treeNodeStack= new Stack<>();
+       ArrayList<TreeNode> treeNodeArrayList= new ArrayList<>();
+       treeNodeStack.push(root);
+       while (flag==1 && !treeNodeStack.isEmpty() || flag==0)
+       {
+           flag=1;
+           while (x.left!=null && !treeNodeArrayList.contains(x.left))
+           {
+               treeNodeStack.push(x.left);
+               x= x.left;
+           }
+           TreeNode t = treeNodeStack.pop();
+           treeNodeArrayList.add(t);
+           if(t.right!=null && !treeNodeArrayList.contains(t.right))
+               treeNodeStack.push(t.right);
+           if(!treeNodeStack.isEmpty())
+           x= treeNodeStack.peek();
+       }
+       return treeNodeArrayList.get(k-1).data;
     }
 
 
@@ -5433,6 +5578,337 @@ public class Solutions {
         return words.trim().replaceAll("\\s{2,}", " ");
 
     }
+
+    public static Node insertionSortList(Node head) {
+        Node x = head.next;
+        Node xprev = head;
+        while (x != null) {
+            Node k = x.next;
+
+            Node temp = head;
+            Node prev = null;
+            while (temp != x && temp.data <= x.data) {
+                prev = temp;
+                temp = temp.next;
+            }
+            if (temp.data > x.data) {
+                xprev.next = x.next;
+                x.next = temp;
+                if (prev != null) {
+                    prev.next = x;
+                } else
+                    head = x;
+                x = k;
+
+            } else {
+                xprev = x;
+                x = k;
+
+            }
+        }
+        return head;
+
+    }
+
+    public static void rotateArrayWithNewArray(int[] nums, int k) {
+        int[] numnew = new int[nums.length];
+
+        for (int i = 0; i < nums.length; i++) {
+            numnew[(i + k) % nums.length] = nums[i];
+        }
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = numnew[i];
+        }
+
+    }
+
+    public static void rotateArrayWithConstantSpace(int[] nums, int k) {
+        int i = 0;
+        int j = nums.length - 1;
+        k = k % nums.length;
+        int temp;
+        while (i < j) {
+            temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+        i = 0;
+        j = k - 1;
+        while (i < j) {
+            temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+        i = k;
+        j = nums.length - 1;
+        while (i < j) {
+            temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+    }
+
+    public static boolean isIsomorphic(String s, String t) {
+        String s1 = "";
+        Map<Character, Character> map = new HashMap<>();
+        int i = 0;
+        for (i = 0; i < s.length(); i++) {
+            if (!map.containsKey(s.charAt(i)) && !map.containsValue(t.charAt(i))) {
+                map.put(s.charAt(i), t.charAt(i));
+
+            }
+            s1 = s1 + map.get(s.charAt(i));
+
+        }
+        if (s1.equals(t))
+            return true;
+        else
+            return false;
+
+    }
+
+    public static int countPrimes(int n) {
+        int count = 0;
+        int flag = 0;
+        for (int i = 2; i < n; i++) {
+            flag = 0;
+            for (int j = 2; j <= (i / 2); j++) {
+                if (i % j == 0) {
+                    flag = 1;
+                    break;
+
+                }
+            }
+            if (flag == 0)
+                count++;
+        }
+        return count;
+
+    }
+
+    public static int countPrimesUsingSieveOfEratosthenes(int n) {
+        if (n == 0 || n == 1)
+            return 0;
+        int count = 0;
+        int arr[] = new int[n];
+        int val = 2;
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = 1;
+        }
+        for (int i = 2; i < arr.length; i++) {
+            if (arr[i] == 1) {
+                count++;
+                int j = 2;
+                int x = 1;
+                x = i * j;
+                while (x <= n - 1) {
+                    arr[x] = 0;
+                    j++;
+                    x = i * j;
+                }
+            }
+        }
+        return count;
+    }
+
+    public static int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] ans = new int[2];
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i])) {
+                ans[0] = i;
+                ans[1] = map.get(target - nums[i]);
+            }
+            map.put(nums[i], i);
+        }
+
+        return ans;
+    }
+
+    public static String mergeAlternately(String word1, String word2) {
+        int i = 0;
+        int j = 0;
+        String str = "";
+        while (i <= word1.length() - 1 && j <= word2.length() - 1) {
+            str = str + word1.charAt(i) + word2.charAt(j);
+            i++;
+            j++;
+        }
+        if (i <= word1.length() - 1) {
+            while (i <= word1.length() - 1) {
+                str = str + word1.charAt(i);
+                i++;
+            }
+        }
+        if (j <= word2.length() - 1) {
+            while (j <= word2.length() - 1) {
+                str = str + word2.charAt(j);
+                j++;
+            }
+        }
+        return str;
+
+    }
+
+
+    public static int[] productExceptSelf(int[] nums) {
+        int[] prefix = new int[nums.length];
+        int[] postfix = new int[nums.length];
+        int x = 1;
+        for (int i = 0; i < prefix.length; i++) {
+            x = x * nums[i];
+            prefix[i] = x;
+        }
+        x = 1;
+        for (int i = postfix.length - 1; i >= 0; i--) {
+            x = x * nums[i];
+            postfix[i] = x;
+        }
+        int ans[] = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0) {
+                ans[i] = postfix[i + 1];
+            } else if (i == nums.length - 1)
+                ans[i] = prefix[i - 1];
+            else {
+                ans[i] = prefix[i - 1] * postfix[i + 1];
+            }
+        }
+        return ans;
+
+
+    }
+
+    public static int[] productExceptSelfWithoutSpace(int[] nums) {
+        int ans[] = new int[nums.length];
+        int x = 1;
+        ans[0] = 1;
+        for (int i = 1; i < nums.length; i++) {
+            x = x * nums[i - 1];
+            ans[i] = x;
+        }
+        x = 1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            x = x * nums[i + 1];
+            ans[i] = x * ans[i];
+        }
+        return ans;
+    }
+
+    public static int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {
+        int area1 = (ay2 - ay1) * (ax2 - ax1);
+        int area2 = (by2 - by1) * (bx2 - bx1);
+        int xoverlap = Math.min(ax2, bx2) - Math.max(ax1, bx1);
+        int yoverlap = Math.min(ay2, by2) - Math.max(ay1, by1);
+        int overlap = 0;
+        if (xoverlap > 0 && yoverlap > 0)
+            overlap = xoverlap * yoverlap;
+        return area1 + area2 - overlap;
+    }
+
+    public  static boolean isUgly(int n) {
+        if(n<0)
+            return false;
+        int x=n;
+        while(x%2==0)
+        {
+            x=x/2;
+        }
+        while(x%3==0)
+        {
+            x=x/3;
+        }
+        while(x%5==0)
+        {
+            x=x/5;
+        }
+        if(x==1)
+            return true;
+        else
+            return false;
+
+    }
+
+    public  static int trailingZeroesInFactorial(int n) {
+        int count=0;
+        while(n/5!=0)
+        {
+            count+=n/5;
+            n=n/5;
+        }
+        return count;
+
+    }
+
+    public static boolean areTwoStringsAnagram(String s, String t) {
+        HashMap<Character,Integer> map= new HashMap<>();
+        for(int i =0; i<s.length(); i++)
+        {
+            if(!map.containsKey(s.charAt(i)))
+                map.put(s.charAt(i),1);
+            else
+                map.put(s.charAt(i),map.get(s.charAt(i))+1);
+        }
+        for(int i =0; i<t.length(); i++)
+        {
+            if(!map.containsKey(t.charAt(i)))
+                return false;
+            else
+                map.put(t.charAt(i),map.get(t.charAt(i))-1);
+        }
+
+        for (Map.Entry<Character, Integer> set :
+                map.entrySet()) {
+            if (set.getValue() != 0)
+                return false;
+
+            }
+            return true;
+        }
+
+    public static int findDuplicate(int[] nums) {
+        int slow=0;
+        int fast=0;
+
+        do
+        {
+
+            slow= nums[slow];
+            fast= nums[nums[fast]];
+        } while(fast!=slow );
+        slow=0;
+        while(slow!=fast)
+        {
+            slow=nums[slow];
+            fast=nums[fast];
+        }
+
+        return fast;
+    }
+
+
+
+
+    public static boolean isPowerOfTwo(int n) {
+        if(n<0)
+            return false;
+
+        double logBase2 = Math.log(n)/Math.log(2);
+        double logResultRounded = Math.round(logBase2 * 1e10) / 1e10;
+        if(Math.floor(logResultRounded)==Math.ceil(logResultRounded))
+            return true;
+        else
+            return false;
+    }
+
+
+
 
 
 }
