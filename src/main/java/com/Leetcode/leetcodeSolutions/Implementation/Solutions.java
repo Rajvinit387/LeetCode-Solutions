@@ -82,6 +82,7 @@ public class Solutions {
 
     static int max;
 
+
     public static int removeduplicates(int[] a) {
         Map<Integer, Integer> map = new LinkedHashMap<>();
         for (int i = 0; i < a.length; i++) {
@@ -1740,9 +1741,254 @@ public class Solutions {
     }
 
 
+    public static boolean isPalindrome(Node head) {
+             Node temp = head;
+             String str="";
+             while (temp!=null)
+             {
+                 str= str+temp.data;
+                 temp= temp.next;
+             }
+             if(isPalindrome(str))
+                 return true;
+             else
+                 return false;
+    }
+
+    public  static  Node addTwoNumbers2(Node l1, Node l2) {
+        Stack<Integer> l1stack = new Stack<>();
+        Stack<Integer> l2stack= new Stack<>();
+        Node temp1= l1;
+        Node temp2 = l2;
+        while (temp1!=null)
+        {
+            l1stack.push(temp1.data);
+            temp1= temp1.next;
+        }
+        while (temp2!=null)
+        {
+            l2stack.push(temp2.data);
+            temp2= temp2.next;
+        }
+        int carry =0;
+        int res=0;
+        Node x = null;
+        Node newHead= null;
+        while (!l1stack.isEmpty() && !l2stack.isEmpty())
+        {
+            int t = (carry+l1stack.pop()+l2stack.pop());
+            res= t%10;
+            carry= t/10;
+            Node newNode = new Node(res);
+            newNode.next= x;
+            x= newHead=newNode;
+        }
+        while (!l1stack.isEmpty())
+        {
+            int t = (carry+l1stack.pop());
+            res= t%10;
+            carry= t/10;
+            Node newNode = new Node(res);
+            newNode.next= x;
+            x= newHead=newNode;
+        }
+        while (!l2stack.isEmpty())
+        {
+            int t = (carry+l2stack.pop());
+            res= t%10;
+            carry= t/10;
+            Node newNode = new Node(res);
+            newNode.next= x;
+            x= newHead=newNode;
+        }
+        if(carry==1)
+        {
+            Node newNode = new Node(1);
+            newNode.next= x;
+            x= newHead=newNode;
+        }
+        return newHead;
+
+    }
+    public  static Node doubleIt(Node head) {
+        int carry=0, res=0;
+        Stack<Integer> nodeStack = new Stack<>();
+        Node temp =head;
+        while (temp!=null)
+        {
+            nodeStack.push(temp.data);
+            temp= temp.next;
+        }
+        Node newHead= null;
+        Node k = null;
+        while (!nodeStack.isEmpty())
+        {
+            int x= nodeStack.pop();
+            res= (x*2)%10;
+            carry= (x*2)/10;
+            Node newNode = new Node(res);
+            newNode.next=k;
+            k= newNode;
+            newHead= newNode;
+
+        }
+        if(carry==1)
+        {
+            Node newNode = new Node(1);
+            newNode.next= newHead;
+            newHead= newNode;
+        }
+        return newHead;
+
+    }
 
 
 
+
+
+    //add polynomial uslng linked list
+
+    public static PolynomialNode addPolynomial(PolynomialNode head1, PolynomialNode head2) {
+        PolynomialNode temp1= head1;
+        PolynomialNode temp2= head2;
+        PolynomialNode x= null;
+        PolynomialNode newHead= null;
+        while (temp1!=null && temp2!=null)
+        {
+            PolynomialNode newPolynomialNode=null;
+            if(temp1.exp== temp2.exp)
+            {
+                newPolynomialNode = new PolynomialNode(temp1.coeff+temp2.coeff, temp2.exp);
+                temp2 = temp2.next;
+                temp1 = temp1.next;
+            }
+            else  if(temp1.exp<temp2.exp)
+            {
+                newPolynomialNode = new PolynomialNode(temp2.coeff, temp2.exp);
+                temp2= temp2.next;
+            }
+            else {
+                newPolynomialNode = new PolynomialNode(temp1.coeff, temp1.exp);
+                temp1= temp1.next;
+            }
+            if(x==null)
+            {
+                newHead= newPolynomialNode;
+                x= newPolynomialNode;
+            }
+            else {
+                x.next = newPolynomialNode;
+                x= newPolynomialNode;
+
+            }
+        }
+        if(temp1!=null)
+        {
+            while (temp1!=null)
+            {
+                PolynomialNode newPolynomialNode = new PolynomialNode(temp1.coeff, temp1.exp);
+                x.next = newPolynomialNode;
+                x= newPolynomialNode;
+                temp1= temp1.next;
+
+            }
+        }
+        if(temp2!=null)
+        {
+            while (temp2!=null)
+            {
+                PolynomialNode newPolynomialNode = new PolynomialNode(temp2.coeff, temp2.exp);
+                x.next = newPolynomialNode;
+                x= newPolynomialNode;
+                temp2= temp2.next;
+            }
+        }
+        return  newHead;
+    }
+
+    //multiply polynomial using linked list
+
+    public static PolynomialNode multiplyPolynomial(PolynomialNode head1, PolynomialNode head2) {
+        PolynomialNode temp1= head1;
+        PolynomialNode temp2= head2;
+        PolynomialNode resultantPolyonimalHead = null;
+        PolynomialNode temp3 = null;
+        PolynomialNode previous= null;
+        while (temp1!=null)
+        {
+            if(temp1.coeff !=0 ) {
+                temp2 = head2;
+                while (temp2 != null) {
+                    if (temp2.coeff != 0) {
+                        temp3 = resultantPolyonimalHead;
+                        if (temp3 == null) {
+                            PolynomialNode newNode = new PolynomialNode(temp1.coeff * temp2.coeff, temp1.exp + temp2.exp);
+                            resultantPolyonimalHead = newNode;
+                            temp3 = newNode;
+
+                        } else {
+
+
+                            while (temp3 != null && temp3.exp > temp1.exp + temp2.exp) {
+                                previous = temp3;
+                                temp3 = temp3.next;
+                            }
+                            if (temp3 != null && (temp3.exp == temp1.exp + temp2.exp)) {
+                                temp3.coeff = temp3.coeff + (temp1.coeff * temp2.coeff);
+                            } else {
+                                PolynomialNode newNode = new PolynomialNode(temp1.coeff * temp2.coeff, temp1.exp + temp2.exp);
+                                previous.next = newNode;
+                                newNode.next = temp3;
+                            }
+                        }
+                    }
+                    temp2 = temp2.next;
+                }
+
+            }
+                temp1 = temp1.next;
+
+            }
+
+    return  resultantPolyonimalHead;
+    }
+
+
+    public static void printPolynomialByPassingHead(PolynomialNode list) {
+        if (list != null) {
+            String str = "";
+            PolynomialNode currentnode = list;
+            while (currentnode != null) {
+                if(currentnode.coeff==0)
+                    continue;
+
+                if(currentnode.exp==1) {
+                    if(currentnode.next!=null && currentnode.next.coeff>0)
+                        str = str + currentnode.coeff + "x" + "+";
+                    else
+                        str = str + currentnode.coeff + "x"  ;
+                }
+                else if(currentnode.exp==0)
+                {
+                    str = str + currentnode.coeff ;
+                }
+
+               else  {
+                    if(currentnode.next!=null && currentnode.next.coeff>0)
+                    str = str + currentnode.coeff + "x" + '^' + currentnode.exp + "+";
+                    else
+                        str = str + currentnode.coeff + "x" + '^' + currentnode.exp ;
+                }
+
+                currentnode = currentnode.next;
+            }
+            if(str.charAt(str.length()-1)=='+')
+            System.out.println(str.substring(0, str.length() - 1));
+            else
+                System.out.println(str);
+            System.out.println("--------");
+        } else System.out.println("Polynomial is empty");
+    }
 
 //end of linked list
 
@@ -2409,6 +2655,103 @@ public class Solutions {
            x= treeNodeStack.peek();
        }
        return treeNodeArrayList.get(k-1).data;
+    }
+
+    public static TreeNode deleteNodeInBST(TreeNode root, int key) {
+        if (root != null && root.data == key && root.left == null && root.right == null)
+            return null;
+            deleteNodeFromBST(root, key);
+            return root;
+
+
+    }
+
+    private static void deleteNodeFromBST(TreeNode root, int key) {
+        TreeNode treeNodeToBeDeleted= searchBST(root,key);
+        if(treeNodeToBeDeleted==null)
+            return;
+        if(treeNodeToBeDeleted.right==null && treeNodeToBeDeleted.left==null) //for no child
+        {
+
+            TreeNode parent = getParentOfNodeInBST(root,treeNodeToBeDeleted.data);
+            if(parent==null)
+                return ;
+            if(parent.left==treeNodeToBeDeleted)
+                parent.left=null;
+            if(parent.right== treeNodeToBeDeleted)
+                parent.right=null;
+            return;
+        }
+
+        if(treeNodeToBeDeleted.left !=null && treeNodeToBeDeleted.right ==null) //for one child in left
+        {
+            TreeNode t = findMaxOfLeftSubTree(treeNodeToBeDeleted.left);
+            int x = t.data;
+            deleteNodeFromBST(root,t.data);
+            treeNodeToBeDeleted.data= x;
+
+        }
+
+        else {
+            //for both children case
+            TreeNode t = findMinOfRightSubTree(treeNodeToBeDeleted.right);
+            int x = t.data;
+            deleteNodeFromBST(root,t.data);
+            treeNodeToBeDeleted.data= x;
+
+        }
+
+    }
+
+    private static TreeNode findMaxOfLeftSubTree(TreeNode left) {
+        while (left.right!=null)
+            left= left.right;
+        return left;
+    }
+
+    private static TreeNode getParentOfNodeInBST(TreeNode root, int key) {
+
+              if(root==null)
+                  return null;
+              TreeNode getParent = null;
+              while (root!=null)
+              {
+                  if(key<root.data)
+                  {
+                      getParent= root;
+                      root= root.left;
+                  }
+                 else if(key>root.data)
+                  {
+                      getParent= root;
+                      root= root.right;
+                  }
+                 else
+                     break;
+              }
+              return getParent;
+
+
+
+    }
+
+    private static TreeNode findMinOfRightSubTree(TreeNode right) {
+        while (right.left!=null)
+            right= right.left;
+        return right;
+    }
+
+    private static TreeNode searchBST(TreeNode root, int key) {
+       while ((root)!=null)
+       {
+           if(root.data==key)
+               return root;
+           else if(root.data>key)
+               root= root.left;
+           else
+               root= root.right;
+       }
+       return null;
     }
 
 
@@ -5908,10 +6251,542 @@ public class Solutions {
     }
 
 
+    public static void moveZeroes(int[] nums) {
+        if (nums.length > 1) {
+            int left = 0;
+            int right = 1;
+            while (right <= nums.length - 1 && left <= nums.length - 1) {
+                if (nums[left] != 0)
+                    left++;
+                if (nums[right] == 0)
+                    right++;
+                if ((right <= nums.length - 1 && left <= nums.length - 1) && nums[left] != 0 && nums[right] != 0) {
+
+                    right++;
+                }
+                if ((right <= nums.length - 1 && left <= nums.length - 1) && nums[right] != 0 && nums[left] == 0) {
+                    int temp = nums[right];
+                    nums[right] = nums[left];
+                    nums[left] = temp;
+                    left++;
+                    right++;
+                }
+            }
+        }
+    }
+
+        public static String getHint(String secret, String guess) {
+        int bull=0;
+        int cow=0;
+        int secretFreq[] = new int[10];
+        int guessFreq[] = new int[10];
+        for(int i =0; i< secret.length(); i++)
+        {
+            if(secret.charAt(i) == guess.charAt(i))
+                bull++;
+            else
+            {
+                secretFreq[Character.getNumericValue(secret.charAt(i))] ++;
+                guessFreq[Character.getNumericValue(guess.charAt(i))]++;
+            }
+        }
+        for(int i =0; i<secretFreq.length; i++)
+        {
+            cow= cow+Math.min(secretFreq[i], guessFreq[i]);
+        }
+
+        return bull+"A"+cow+"B";
+
+        }
+
+    public static String reverseVowels(String s) {
+        char[] word= s.toCharArray();
+        int i =0, j = s.length()-1;
+        while (i<j)
+        {
+            if(!isVowel(s.charAt(i)))
+                i++;
+            if(!isVowel(s.charAt(j)))
+                j++;
+            if((i<j) && (isVowel(s.charAt(i)) && isVowel(s.charAt(j))))
+            {
+                char temp= word[j];
+                word[j]= word[i];
+                word[i]=temp;
+                i++;
+                j--;
+            }
+        }
+        return new String(word);
+
+
+    }
+
+
+     private static boolean isVowel(char c)
+     {
+         if(c=='a' || c=='e' || c=='i' || c=='o' || c=='u' || c=='A' || c=='E' || c=='I' || c=='O' || c=='U')
+             return true;
+         else
+             return false;
+     }
+
+
+//saddle point in matrix
+    public  static List<Integer> luckyNumbers (int[][] matrix) {
+        int [][] flag= new int[matrix.length][matrix[0].length];
+        List<Integer> ans = new ArrayList<>();
+        int min, max,  minIndex, maxIndex;
+        for(int i =0; i<matrix.length; i++)
+        {
+            for(int j =0; j<matrix[0].length; j++)
+            {
+                if(flag[i][j]==0)
+                {
+
+                     min = matrix[i][0];
+                     minIndex=j;
+                     for(int k =1; k<matrix[0].length; k++) {
+                         if(min>matrix[i][k]) {
+                             min = matrix[i][k];
+                             minIndex = k;
+                         }
+                     }
+
+
+                        for(int k=0; k<matrix[0].length; k++)
+                        {
+                            if(k!=minIndex)
+                                flag[i][k]=1;
+                        }
+
+
+                    max = matrix[0][j];
+                    maxIndex=i;
+
+                    for(int k =1; k<matrix.length; k++) {
+                       if(max<matrix[k][j])
+                       {
+                           maxIndex= k;
+                           max= matrix[k][j];
+                       }
+                    }
+
+
+                        for(int k=0; k<matrix.length; k++)
+                        {
+                            if(k!=maxIndex)
+                                flag[k][j]=1;
+                        }
+
+                     if(max== min && min== matrix[i][j])
+                        ans.add(max);
+
+                }
+            }
+
+        }
+        return ans;
+
+    }
+
+    public static int arrangeCoins(int n) {
+
+        if(n==1)
+            return 1;
+
+        int x= (int)Math.ceil((double)n/2);
+        long sum=0;
+        int i =1;
+        while( i<=x)
+        {
+
+
+            sum = sum+i;
+
+            if(sum>n )
+            {
+                return i-1;
+            }
+            i++;
+
+        }
+
+            return i-1;
+
+    }
+
+    public  static  int compress(char[] chars) {
+        int count=1;
+        String str="";
+        for(int i =1; i< chars.length; i++)
+        {
+            if(chars[i]==chars[i-1])
+                count++;
+            else {
+                if(count!=1)
+                str=str+String.valueOf(chars[i-1])+count;
+                else
+                    str= str+String.valueOf(chars[i-1]);
+                count=1;
+            }
+        }
+        if(count==1)
+            str= str+chars[chars.length-1];
+        else
+            str= str+ chars[chars.length-1]+count;
+        for(int i =0; i<str.length(); i++)
+            chars[i]= str.charAt(i);
+        return str.length();
+
+    }
+    public static boolean isPowerOfThree(int n) {
+        double x=   Math.log(n);
+        double y=   Math.log(3);
+        double z = x/y;
+        double w = z - (int) z;
+        return Math.abs(z - Math.round(z)) < 1e-10;
+    }
+
+    public static int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> integerSet= new HashSet<>();
+         for(int i =0; i<nums1.length; i++)
+         {
+             for(int j =0; j< nums2.length; j++)
+             {
+                 if(nums1[i]==nums2[j])
+                     integerSet.add(nums1[i]);
+             }
+         }
+         int ans[] = new int[integerSet.size()];
+         int j=0;
+         for (Integer i: integerSet) {
+             ans[j] = i;
+             j++;
+         }
+         return ans;
+    }
+
+
+    public static int[] intersectionII(int[] nums1, int[] nums2) {
+        int max = nums1[0];
+        List<Integer> answer = new ArrayList<>();
+        for (int i = 1; i < nums1.length; i++) {
+            if (max < nums1[i])
+                max = nums1[i];
+        }
+        int freqarray[] = new int[max + 1];
+        for (int i = 0; i < nums1.length; i++) {
+            freqarray[nums1[i]]++;
+        }
+        for (int i = 0; i < nums2.length; i++) {
+            if (nums2[i]<=freqarray.length-1 && freqarray[nums2[i]] > 0  ) {
+                answer.add(nums2[i]);
+                freqarray[nums2[i]]--;
+            }
+        }
+        int arr[] = new int[answer.size()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = answer.get(i);
+        }
+        return arr;
+    }
+
+    public static boolean containsDuplicate(int[] nums) {
+        Set<Integer> integerSet= new HashSet<>();
+        for(int i =0; i<nums.length; i++)
+        {
+            if(!integerSet.contains(nums[i]))
+               integerSet.add(nums[i]);
+            else
+                return true;
+
+            }
+        return false;
+        }
+    public static int pivotIndex(int[] nums) {
+           int sumleft=0; int sumright=0;
+        for(int i=1; i<nums.length; i++)
+            sumleft=sumleft+nums[i];
+        if(sumleft==0)
+            return 0;
+
+          sumleft=sumright=0;
+         for(int i=1; i<nums.length-1; i++)
+         {
+             for(int j=0; j<i; j++)
+                 sumleft= sumleft+nums[j];
+             for(int j=i+1; j<nums.length; j++)
+                 sumright= sumright+nums[j];
+             if(sumleft==sumright)
+             {
+
+                 return i;
+             }
+             sumleft=sumright=0;
+         }
+        for(int i=0; i<nums.length-1; i++)
+            sumright=sumright+nums[i];
+        if(sumright==0)
+            return nums.length-1;
+         return -1;
+    }
+
+
+    public int findContentChildren(int[] g, int[] s) {
+   int count=0;
+   Arrays.sort(g);
+   Arrays.sort(s);
+   int i =0, j=0;
+   while (i < g.length && j <s.length)
+   {
+       if(g[i]<=s[j])
+       {
+           i++;
+           j++;
+           count++;
+       }
+       else
+           j++;
+   }
+   return count;
+    }
+
+    public  static boolean isHappy(int n) {
+        int sum=0, rem;
+        Set<Integer> integerSet= new HashSet<>();
+        while (sum!=1)
+        {
+            while (n!=0)
+            {
+                rem = n%10;
+                sum= sum+rem*rem;
+
+                n= n/10;
+            }
+
+            if(!integerSet.contains(sum))
+                integerSet.add(sum);
+            else if(sum!=1)
+                return false;
+            n =sum;
+            if(sum!=1)
+            sum=0;
+        }
+        return true;
+
+    }
+
+
+    public static char findTheDifference(String s, String t) {
+      Map<Character, Integer> characterIntegerMap= new HashMap<>();
+      for(int i =0; i<s.length(); i++)
+      {
+          if(!characterIntegerMap.containsKey(s.charAt(i)))
+              characterIntegerMap.put(s.charAt(i),1);
+          else
+              characterIntegerMap.put(s.charAt(i),characterIntegerMap.get(s.charAt(i))+1);
+      }
+      for(int i =0; i<t.length(); i++)
+      {
+          if(characterIntegerMap.containsKey(t.charAt(i))) {
+              characterIntegerMap.put(t.charAt(i), characterIntegerMap.get(t.charAt(i)) - 1);
+              if(characterIntegerMap.get(t.charAt(i))==0)
+                  characterIntegerMap.remove(t.charAt(i));
+          }
+          else
+              return t.charAt(i);
+      }
+        return 0;
+    }
+
+
+    public static boolean isSubsequence(String s, String t) {
+
+        if(t.length()==0 && s.length()>=1)
+            return false;
+        int i =0, j=0;
+        while (i<s.length() && j<t.length())
+        {
+            if(s.charAt(i)==t.charAt(j))
+            {
+                i++;
+                j++;
+            }
+            else
+                j++;
+            if(j==t.length() && i<s.length())
+                return false;
+        }
+        return true;
+    }
+
+
+    public static boolean isMonotonic(int[] nums) {
+        int i =0;
+        while ( i+1 < nums.length && nums[i] == nums[i+1]) {
+            i++;
+        }
+        if(i == nums.length-1)
+            return true;
+        if(nums[i]<nums[i+1]) {
+            for (int j = i+1; j < nums.length; j++) {
+                if (nums[j] < nums[j-1])
+                    return false;
+            }
+            return true;
+        }
+
+        else  {
+            for (int j = i+1; j< nums.length; j++) {
+                if (nums[j] > nums[j-1])
+                    return false;
+            }
+
+            return true;
+        }
+
+    }
+
+
+    public static int heightChecker(int[] heights) {
+        int[] temp= new int[heights.length];
+        for(int i =0; i<temp.length;i++)
+            temp[i]= heights[i];
+        Arrays.sort(temp);
+        int count=0;
+        for(int i =0; i<temp.length; i++)
+        {
+            if(temp[i]!=heights[i])
+                count++;
+        }
+        return count;
+    }
+
+    public static boolean  isBoomerang(int[][] points) {
+        int s1=points[2][1]-points[1][1];
+        int s2= points[2][0]-points[1][0];
+        int s3=points[1][1]-points[0][1];
+        int s4= points[1][0]-points[0][0];
+        return (s1*s4!=s2*s3);
+
+    }
+
+    public static int[] decompressRLElist(int[] nums) {
+        int size=0;
+        for(int  i=0; i<nums.length; i++)
+        {
+            if(i%2==0)
+                size+=nums[i];
+        }
+        int decompressedArray[]= new int[size];
+        int j=0;
+
+        for(int i=0; i< nums.length; i=i+2)
+        {
+            for(int k =0; k< nums[i]; k++)
+            {
+                decompressedArray[j]= nums[i+1];
+                j++;
+            }
+        }
+        return decompressedArray;
+    }
+
+    public static int[] kWeakestRows(int[][] mat, int k) {
+        int[][] freqMatrix = new int[mat.length][2];
+        int count = 0;
+        for (int i = 0; i < mat.length; i++) {
+            count = 0;
+            for (int j = 0; j < mat[0].length; j++) {
+                if (mat[i][j] == 1)
+                    count++;
+            }
+            freqMatrix[i][0] = i;
+            freqMatrix[i][1] = count;
+        }
+        Arrays.sort(freqMatrix, (a, b) -> Integer.compare(a[1], b[1]));
+        int ans[] = new int[k];
+        for (int i = 0; i < k; i++)
+            ans[i] = freqMatrix[i][0];
+        return ans;
+    }
+
+    public static String reverseStr(String s, int k) {
+        char[] str = new char[s.length()];
+        for (int i = 0; i < s.length(); i++)
+            str[i] = s.charAt(i);
+        int x = 0, y = 0;
+        char temp;
+
+        for (int i = 0; i < s.length(); i = i + k * 2) {
+            x = i;
+            y = i + k - 1;
+            if(y>s.length()-1)
+                y= s.length()-1;
+            while ( x < y) {
+                temp = str[x];
+                str[x] = str[y];
+                str[y] = temp;
+                x++;
+                y--;
+            }
+        }
+        return String.valueOf(str);
+    }
+
+    public static int numJewelsInStones(String jewels, String stones) {
+        Map<Character, Integer> characterIntegerMap = new HashMap<>();
+        int count = 0;
+        for (int i = 0; i < stones.length(); i++) {
+            if (!characterIntegerMap.containsKey(stones.charAt(i)))
+                characterIntegerMap.put(stones.charAt(i), 1);
+            else
+                characterIntegerMap.put(stones.charAt(i), characterIntegerMap.get(stones.charAt(i)) + 1);
+        }
+        for (int i = 0; i < jewels.length(); i++) {
+            if (characterIntegerMap.containsKey(jewels.charAt(i)))
+                count = count + characterIntegerMap.get(jewels.charAt(i));
+        }
+   return  count;
+
+    }
+
+    public static int[] diStringMatch(String s) {
+        int lp=0;
+        int rp=s.length();
+        int ans[] = new int[s.length()+1];
+        int j=0;
+        for(int i =0; i<=s.length()-1; i++)
+        {
+            if(s.charAt(i)=='I')
+            {
+                ans[j]=lp;
+                lp++;
+            }
+            else
+            {
+                ans[j]=rp;
+                rp--;
+            }
+            j++;
+        }
+        if(s.charAt(s.length()-1)=='I')
+            ans[ans.length-1]=lp;
+        else
+            ans[ans.length-1]=rp;
+        return ans;
+
+    }
+
+
+    }
 
 
 
-}
+
+
+
 
 
 
