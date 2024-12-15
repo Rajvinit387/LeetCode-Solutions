@@ -6779,7 +6779,23 @@ public class Solutions {
 
     }
 
+    public static boolean validMountainArray(int[] arr) {
+        if(arr.length==1)
+            return false;
+        int j =0;
+        int flag=0;
+        while ( j+1 <= arr.length-1 && arr[j]<arr[j+1])
+            j++;
+        while ( (j!=0)  && j+1 <= arr.length-1 && arr[j] > arr[j+1]) {
+            flag=1;
+            j++;
+        }
+        if(j==arr.length-1 && flag==1)
+            return true;
+        else
+            return false;
 
+    }
     }
 
 
